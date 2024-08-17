@@ -219,7 +219,10 @@ class Game {
     let bool = false;
     let nbr = 0;
     sommet_possible.forEach(function (sommet) {
-      if (!game.thief.can_moov(sommet, game.personnes)) {
+      if (
+        !game.thief.can_moov(sommet, game.personnes) ||
+        sommet.id === lastsommet
+      ) {
         nbr++;
       }
     });

@@ -1,12 +1,19 @@
 class Sommet {
   constructor(id) {
-    // this.id = id
+    this._id = id;
     this._voisins = [];
-    this.id = id;
   }
 
   get id() {
     return this._id;
+  }
+
+  set id(value) {
+    if (typeof value === "string") {
+      this._id = value;
+    } else {
+      console.error("ID must be a string");
+    }
   }
 
   get voisins() {
@@ -17,96 +24,88 @@ class Sommet {
     if (value instanceof Sommet) {
       this._voisins.push(value);
     } else {
-      console.error("incompatible type of Sommet");
+      console.error("Value must be an instance of Sommet");
     }
-  }
-
-  set id(value) {
-    if (typeof value === "string") this._id = value;
-    else console.error("incompatible type str in id");
   }
 
   verifieDeplacement(sommet_moov) {
-    let voisins = this._voisins;
-    return voisins.includes(sommet_moov);
+    return this._voisins.includes(sommet_moov);
   }
 
   static get_sommet_by_id(indice, sommets) {
-    for (const sommet of sommets) {
-      if (sommet.id === indice) {
-        return sommet;
-      }
+    const sommet = sommets.find((sommet) => sommet.id === indice);
+    if (!sommet) {
+      console.error(`ID ${indice} not found`);
     }
-    console.error("id introuvable " + indice + " not found");
-    return null;
+    return sommet;
   }
 
   static reconstruireChemin(predecesseurs, sommetArrivee) {
     const chemin = [];
     let sommet = sommetArrivee;
 
-    // On remonte le chemin depuis le sommet d'arrivée jusqu'au sommet de départ
     while (sommet !== null) {
       chemin.unshift(sommet);
       sommet = predecesseurs.get(sommet);
     }
+
     return chemin;
   }
 
   static trouverChemin(game, sommetDepart, sommetArrivee) {
-    const fileAttente = [[sommetDepart]]; // File de chemins à explorer
+    const fileAttente = [[sommetDepart]];
     const dejaVisites = new Set();
-    let cheminsTrouves = [
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1,
-    ]; // stocker tous les chemins
+    let cheminOptimal = null;
 
-    // Parcours en largeur
     while (fileAttente.length > 0) {
-      const cheminCourant = fileAttente.shift(); // Prendre le premier chemin dans la file
-      const sommetCourant = cheminCourant[cheminCourant.length - 1]; // Dernier sommet du chemin
+      const cheminCourant = fileAttente.shift();
+      const sommetCourant = cheminCourant[cheminCourant.length - 1];
+
       if (sommetCourant.id === sommetArrivee.id) {
-        // return cheminCourant;
-        if (cheminsTrouves.length > cheminCourant.length) {
-          cheminsTrouves = cheminCourant;
+        if (!cheminOptimal || cheminCourant.length < cheminOptimal.length) {
+          cheminOptimal = cheminCourant;
         }
-        continue; // Continuer avec le prochain chemin dans la file
+        continue;
       }
 
       dejaVisites.add(sommetCourant);
 
-      // Explorer les voisins du sommet courant
       for (const voisin of sommetCourant.voisins) {
         if (!dejaVisites.has(voisin) && !game.getcopsByPlace(voisin)) {
-          // Créer un nouveau chemin en ajoutant le voisin au chemin courant
           const nouveauChemin = [...cheminCourant, voisin];
           fileAttente.push(nouveauChemin);
         }
       }
     }
-    return cheminsTrouves;
+
+    return cheminOptimal || [];
   }
 
-  static tacticPolicier(game, dificulty) {
-    const df = dificulty + 0;
-    const mimax = Sommet.minimax(game, dificulty, df, true);
-    game.getCops()[mimax[1]].deplacer(mimax[0], game.personnes);
-    console.log("chemin trouver =");
-    console.log(mimax);
-    return game.getCops(mimax[1]);
+  static tacticPolicier(game, difficulty) {
+    const depth = difficulty;
+    const bestMove = Sommet.minimax(game, difficulty, depth, true);
+    const bestMoveSommet = bestMove[0];
+    const policeIndex = bestMove[1];
+
+    game.getCops()[policeIndex].deplacer(bestMoveSommet, game.personnes);
+
+    console.log("Best move found:", bestMove);
+
+    return game.getCops(policeIndex);
   }
 
-  comparChemin(tableau) {
-    let id = 0;
-    let tailleMax = 0;
-    0;
-    for (let i = 0; i < tableau.length; i++) {
-      if (tailleMax < tableau[i].length) {
-        id = i.valueOf();
-        tailleMax = tableau[i].length;
+  comparChemin(tableaux) {
+    let maxLength = 0;
+    let maxIndex = 0;
+
+    for (let i = 0; i < tableaux.length; i++) {
+      if (tableaux[i].length > maxLength) {
+        maxLength = tableaux[i].length;
+        maxIndex = i;
       }
     }
-    return id;
+
+    return maxIndex;
   }
 
   static evaluateGame(gameState) {
@@ -118,22 +117,38 @@ class Sommet {
     );
 
     const policiers = gameState.getCops();
-    var point = 0;
-    for (const pointPol of policiers) {
+    let score = 0;
+
+    for (const police of policiers) {
       const cheminPolVol = Sommet.trouverChemin(
         gameState,
-        pointPol.place,
+        police.place,
         voleur.place
       );
-      point = point - (cheminPolVol.length > 0 ? cheminPolVol.length : 0);
+      score -= cheminPolVol.length > 0 ? cheminPolVol.length : 0;
+
+      const policeCentre = Sommet.trouverChemin(
+        gameState,
+        police.place,
+        gameState.sommets[4]
+      );
+      score += policeCentre.length > 0 ? policeCentre.length : 0;
     }
-    point = point + (voleurCentre.length > 0 ? voleurCentre.length : 0);
-    return point;
+
+    score += voleurCentre.length > 0 ? voleurCentre.length : 0;
+
+    const escapeRoutes = voleur.place.voisins.filter((neighbor) =>
+      voleur.can_moov(neighbor, gameState.personnes)
+    ).length;
+    score -= escapeRoutes * 5;
+
+    return score;
   }
+
   static minimax(
     gameState,
     depth,
-    df,
+    maxDepth,
     maximizingPlayer,
     alpha = -Infinity,
     beta = Infinity
@@ -158,32 +173,33 @@ class Sommet {
             !gameState.getcopsByPlace(neighbor) &&
             police.can_moov(neighbor, gameState.personnes)
           ) {
-            const Pnew = new Person(police.name, neighbor, police.type);
             const newPoliceState = gameState
               .getCops()
-              .map((p, index) => (index === i ? Pnew : p));
+              .map((p, index) =>
+                index === i ? new Person(police.name, neighbor, police.type) : p
+              );
             const newState = new Game(gameState.thief, newPoliceState);
-            const evaluate = Sommet.minimax(
+            const evale = Sommet.minimax(
               newState,
               depth - 1,
-              df,
+              maxDepth,
               false,
               alpha,
               beta
             );
-            if (evaluate > maxEval) {
-              maxEval = evaluate;
+
+            if (evale > maxEval) {
+              maxEval = evale;
               bestMoveAndPolice = [neighbor, i];
             }
-            alpha = Math.max(alpha, evaluate);
-            if (beta <= alpha) {
-              break; // Beta cut-off
-            }
+
+            alpha = Math.max(alpha, evale);
+            if (beta <= alpha) break; // Beta cut-off
           }
         }
       }
 
-      return depth === df ? bestMoveAndPolice.slice() : maxEval;
+      return depth === maxDepth ? bestMoveAndPolice.slice() : maxEval;
     } else {
       let minEval = Infinity;
 
@@ -195,21 +211,21 @@ class Sommet {
             gameState.thief.type
           );
           const newState = new Game(newThiefState, gameState.getCops());
-          const evaluate = Sommet.minimax(
+          const evale = Sommet.minimax(
             newState,
             depth - 1,
-            df,
+            maxDepth,
             true,
             alpha,
             beta
           );
-          minEval = Math.min(minEval, evaluate);
-          beta = Math.min(beta, evaluate);
-          if (beta <= alpha) {
-            break; // Alpha cut-off
-          }
+
+          minEval = Math.min(minEval, evale);
+          beta = Math.min(beta, evale);
+          if (beta <= alpha) break; // Alpha cut-off
         }
       }
+
       return minEval;
     }
   }

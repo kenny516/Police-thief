@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <script src="model/Personne.js"></script>
+    <script src="model/Sommet.js"></script>
+    <script src="model/Game.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+<div class="carre">
+    <div class="carre1">
+        <div class="cn sommet"></div>
+        <div class="cw sommet"></div>
+        <div class="ce sommet"></div>
+        <div class="cs sommet"></div>
+        <div class="cc sommet"></div>
+    </div>
+
+    <div class="nord"></div>
+    <div class="sud"></div>
+
+    <div class="nn sommet"></div>
+    <div class="nw sommet"></div>
+    <div class="ne sommet"></div>
+    <div class="ns sommet"></div>
+
+    <div class="sn sommet"></div>
+    <div class="sw sommet"></div>
+    <div class="se sommet"></div>
+    <div class="ss sommet"></div>
+
+    <div class="wn sommet"></div>
+    <div class="ww sommet"></div>
+    <div class="we sommet"></div>
+    <div class="ws sommet"></div>
+
+    <div class="en sommet"></div>
+    <div class="ew sommet"></div>
+    <div class="ee sommet"></div>
+    <div class="es sommet"></div>
+</div>
+
+<script>
+    // Sélectionnez tous les éléments avec la classe "sommet"
+    const sommets = document.querySelectorAll('.sommet');
+    const jeu_donne = new Game();
+    jeu_donne.initial_paint();
+
+    // Ajoutez un écouteur d'événements de clic à chaque sommet
+    sommets.forEach(sommet => {
+        sommet.addEventListener('click', () => {
+            // Récupérez la classe de l'élément cliqué
+            const classeSelectionnee = sommet.classList[0];
+
+            const voleur = jeu_donne.get_voleur();
+            const classeAncienne = voleur.place.id;
+
+            const New_sommet = Sommet.get_sommet_by_id(classeSelectionnee, jeu_donne.sommets);
+
+            if (voleur.deplacer(New_sommet, jeu_donne.personnes)) {
+                // Colorer en noir toutes les classes "sommet"
+                sommets.forEach(sommet => {
+
+                    sommet.style.backgroundColor = 'black';
+                });
+                jeu_donne.initial_paint();
+
+                Sommet.tacticPolicier(jeu_donne);
+
+                // Colorer en noir toutes les classes "sommet" après le déplacement de la police
+                sommets.forEach(sommet => {
+                    sommet.style.backgroundColor = 'black';
+                });
+                jeu_donne.initial_paint();
+                if(jeu_donne.loseGame(jeu_donne)){
+                    alert("La police a gagné!");
+                }
+                if (jeu_donne.winGame(voleur)){
+                    alert("Le voleur a gagné!");
+                }
+
+            }
+        });
+    });
+
+</script>
+
+</body>
+
+</html>

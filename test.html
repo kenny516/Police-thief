@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="assets/css/test.css">
+    <style type="text/css">
+    </style>
+    <script src="model/Personne.js"></script>
+    <script src="model/Sommet.js"></script>
+    <script src="model/Game.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div class="platform">
+    <div class="cn sommet"></div>
+    <div class="cw sommet"></div>
+    <div class="ce sommet"></div>
+    <div class="cs sommet"></div>
+    <div class="cc sommet"></div>
+
+    <div class="nord"></div>
+    <div class="sud"></div>
+
+    <div class="nn sommet"></div>
+    <div class="nw sommet"></div>
+    <div class="ne sommet"></div>
+    <div class="ns sommet"></div>
+
+    <div class="sn sommet"></div>
+    <div class="sw sommet"></div>
+    <div class="se sommet"></div>
+    <div class="ss sommet"></div>
+
+    <div class="wn sommet"></div>
+    <div class="ww sommet"></div>
+    <div class="we sommet"></div>
+    <div class="ws sommet"></div>
+
+    <div class="en sommet"></div>
+    <div class="ew sommet"></div>
+    <div class="ee sommet"></div>
+    <div class="es sommet"></div>
+</div>
+
+</body>
+</html>
+<script>
+
+    let jeu = new Game();
+    const voleur = jeu.get_voleur();
+    voleur.place = jeu.sommets[20];
+    // const police = jeu.getCops();
+     const cheminsTrouves = Sommet.trouverChemin(jeu,jeu.sommets[20],jeu.sommets[4]);
+     console.log(cheminsTrouves);
+    // for (const chemin of cheminsTrouves) {
+    //     console.log("Chemin trouvé :");
+    //     for (const sommet of chemin) {
+    //         console.log("Position : " + sommet.id);
+    //     }
+    //     console.log("-----------------");
+    // }
+    //
+    //const res = Sommet.minimax(jeu,10,true);
+    //console.log(res);
+</script>

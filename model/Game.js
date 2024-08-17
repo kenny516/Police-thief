@@ -214,7 +214,7 @@ class Game {
     return bool;
   }
 
-  loseGame(game) {
+  loseGame(game, lastsommet) {
     let sommet_possible = game.thief.place.voisins;
     let bool = false;
     let nbr = 0;

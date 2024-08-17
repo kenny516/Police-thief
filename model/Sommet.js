@@ -89,7 +89,7 @@ class Sommet {
 
   static tacticPolicier(game, dificulty) {
     const df = dificulty + 0;
-    const mimax = Sommet.minimax(game, 6, 6, true);
+    const mimax = Sommet.minimax(game, dificulty, df, true);
     game.getCops()[mimax[1]].deplacer(mimax[0], game.personnes);
     console.log("chemin trouver =");
     console.log(mimax);

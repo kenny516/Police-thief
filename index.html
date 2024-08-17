@@ -61,10 +61,13 @@
         // Initialize game
         var jeu_donne = new Game();
         jeu_donne.initial_paint();
+
+        var lastSommet = "cc";
         // Select all elements with class "sommet"
         const sommets = document.querySelectorAll('.sommet');
 
         function setDifficulty() {
+            lastSommet = "cc";
             const select = document.getElementById('difficulty-select');
             difficulty = parseInt(select.value, 10);
             jeu_donne = new Game();
@@ -87,31 +90,39 @@
 
 
         // Add event listener to each sommet
+
         sommets.forEach(sommet => {
             sommet.addEventListener('click', () => {
+                console.log("lastSommet", lastSommet);
                 updateTour(); // Update tour count display
 
                 // Get the clicked element's class
                 const classeSelectionnee = sommet.classList[0];
+                if (classeSelectionnee === lastSommet) {
+                    alert("You can't click twice on the same square or last square");
+                } else {
+                    const voleur = jeu_donne.get_voleur();
+                    const classeAncienne = voleur.place.id;
 
-                const voleur = jeu_donne.get_voleur();
-                const classeAncienne = voleur.place.id;
+                    const New_sommet = Sommet.get_sommet_by_id(classeSelectionnee, jeu_donne.sommets);
 
-                const New_sommet = Sommet.get_sommet_by_id(classeSelectionnee, jeu_donne.sommets);
+                    const historypath = voleur.place.id;
+                    if (voleur.deplacer(New_sommet, jeu_donne.personnes, lastSommet)) {
 
-                if (voleur.deplacer(New_sommet, jeu_donne.personnes)) {
-                    tour++;
-                    // Color all "sommet" elements black
-                    sommets.forEach(sommet => sommet.style.backgroundColor = 'black');
-                    jeu_donne.initial_paint();
-                    Sommet.tacticPolicier(jeu_donne, difficulty);
+                        lastSommet = historypath;
+                        tour++;
+                        // Color all "sommet" elements black
+                        sommets.forEach(sommet => sommet.style.backgroundColor = 'black');
+                        jeu_donne.initial_paint();
+                        Sommet.tacticPolicier(jeu_donne, difficulty);
 
-                    // Color all "sommet" elements black after police move
-                    sommets.forEach(sommet => sommet.style.backgroundColor = 'black');
-                    jeu_donne.initial_paint();
+                        // Color all "sommet" elements black after police move
+                        sommets.forEach(sommet => sommet.style.backgroundColor = 'black');
+                        jeu_donne.initial_paint();
 
-                    if (jeu_donne.loseGame(jeu_donne)) {
-                        alert("La police a gagné!");
+                        if (jeu_donne.loseGame(jeu_donne, lastSommet)) {
+                            alert("La police a gagné!");
+                        }
                     }
                 }
             });

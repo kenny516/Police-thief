@@ -1,188 +1,224 @@
-body{
-    height: 100vh;
-    display: flex ;
-    justify-content: center;
-    align-items: center;
-
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Courier New", Courier, monospace;
+}
+label {
+  font-size: large;
+}
+.game {
+  display: flex-column;
+  justify-content: center;
 }
 
-.carre{
+.menu {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-    border: solid black;
-    width: 500px;
-    height: 500px;
-    /*border-radius: 50%;*/
-    display: flex ;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
+.menu label {
+  font-weight: bold;
+}
+
+.menu select,
+.menu button {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.menu button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background-color: #0056b3;
+}
+
+.carre {
+  border: solid black;
+  width: 500px;
+  height: 500px;
+  /*border-radius: 50%;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
 }
 
 .carre::before,
-.carre::after{
-    content: '';
+.carre::after {
+  content: "";
 
-    width: 100%;
-    height: 3px;
-    position: absolute;
-    background: rgb(10, 7, 7);
+  width: 100%;
+  height: 3px;
+  position: absolute;
+  background: rgb(10, 7, 7);
 }
 
-.carre::after{
-    transform: rotate(90deg);
+.carre::after {
+  transform: rotate(90deg);
 }
 
-.carre1{
-    border: solid black;
-    width: 150px;
-    height: 150px;
-    /*border-radius: 50%;*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.carre1 {
+  border: solid black;
+  width: 150px;
+  height: 150px;
+  /*border-radius: 50%;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-.nord , .sud , .nord::before , .nord::after {
-    border: solid black;
-    width: 150px;
-    height: 150px;
-    /*border-radius: 50%;*/
-    position: absolute;
+.nord,
+.sud,
+.nord::before,
+.nord::after {
+  border: solid black;
+  width: 150px;
+  height: 150px;
+  /*border-radius: 50%;*/
+  position: absolute;
 }
 
-.nord{
-    margin-bottom: 500px;
+.nord {
+  margin-bottom: 500px;
 }
 
-.sud{
-    margin-top: 500px;
+.sud {
+  margin-top: 500px;
 }
 
-.nord::after{
-    content: '';
-    margin-top: 250px;
-    margin-left: 250px;
+.nord::after {
+  content: "";
+  margin-top: 250px;
+  margin-left: 250px;
 }
 
-.nord::before{
-    content: '';
-    margin-top: 250px;
-    margin-left: -250px;
+.nord::before {
+  content: "";
+  margin-top: 250px;
+  margin-left: -250px;
 }
 
-
-
-.sommet{
-    cursor: pointer;
-    border: solid black ;
-    background: black;
-    width: 15px;
-    aspect-ratio: 1 / 1;
-    /*border-radius: 50%;*/
-    position:absolute;
-    transition: 150ms;
-    z-index: 1;
+.sommet {
+  cursor: pointer;
+  border: solid black;
+  background: black;
+  width: 15px;
+  aspect-ratio: 1 / 1;
+  /*border-radius: 50%;*/
+  position: absolute;
+  transition: 150ms;
+  z-index: 1;
 }
 
-.sommet:hover{
-    background: rgb(24, 85, 227);
+.sommet:hover {
+  background: rgb(24, 85, 227);
 }
 
 /* sommets cercle */
 /* nord  */
-.nn{
-    margin-bottom: 500px;
+.nn {
+  margin-bottom: 500px;
 }
 
-.ns{
-    margin-bottom: 350px ;
+.ns {
+  margin-bottom: 350px;
 }
 
-.nw{
-    margin-right: 150px;
-    margin-bottom: 480px;
+.nw {
+  margin-right: 150px;
+  margin-bottom: 480px;
 }
 
-.ne{
-    margin-right: -150px;
-    margin-bottom: 480px;
+.ne {
+  margin-right: -150px;
+  margin-bottom: 480px;
 }
 
 /* sud  */
-.ss{
-    margin-bottom: -500px;
+.ss {
+  margin-bottom: -500px;
 }
 
-.sn{
-    margin-bottom: -350px ;
+.sn {
+  margin-bottom: -350px;
 }
 
-.sw{
-    margin-right: 150px;
-    margin-bottom: -480px;
+.sw {
+  margin-right: 150px;
+  margin-bottom: -480px;
 }
 
-.se{
-    margin-right: -150px;
-    margin-bottom: -480px;
+.se {
+  margin-right: -150px;
+  margin-bottom: -480px;
 }
 
 /* left  */
-.wn{
-    margin-right: 480px;
-    margin-bottom: 150px;
+.wn {
+  margin-right: 480px;
+  margin-bottom: 150px;
 }
 
-.ww{
-    margin-right: 500px;
+.ww {
+  margin-right: 500px;
 }
 
-.we{
-    margin-right: 345px;
+.we {
+  margin-right: 345px;
 }
 
-.ws{
-    margin-right: 480px;
-    margin-bottom: -150px;
+.ws {
+  margin-right: 480px;
+  margin-bottom: -150px;
 }
 
 /* right */
-.en{
-    margin-right: -480px;
-    margin-bottom: 150px;
+.en {
+  margin-right: -480px;
+  margin-bottom: 150px;
 }
 
-.ee{
-    margin-right: -500px;
+.ee {
+  margin-right: -500px;
 }
 
-.ew{
-    margin-right: -345px;
+.ew {
+  margin-right: -345px;
 }
 
-.es{
-    margin-right: -480px;
-    margin-bottom: -150px;
+.es {
+  margin-right: -480px;
+  margin-bottom: -150px;
 }
-
-
 
 /* .cercle1  */
 
-.cn{
-    margin-bottom: 150px;
+.cn {
+  margin-bottom: 150px;
 }
 
-.cs{
-    margin-bottom: -150px;
+.cs {
+  margin-bottom: -150px;
 }
 
-.ce{
-    margin-left: 150px;
+.ce {
+  margin-left: 150px;
 }
 
-.cw{
-    margin-left: -150px;
+.cw {
+  margin-left: -150px;
 }

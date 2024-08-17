@@ -10,6 +10,12 @@
   <img src="https://img.shields.io/badge/made%20with-HTML%20%7C%20CSS%20%7C%20JavaScript-orange.svg" alt="Tech">
 </p>
 
+<p align="center">
+  <a href="https://kenny516.github.io/Police-thief/">
+    <img src="https://img.shields.io/badge/Demo-Play%20Now%20%F0%9F%91%80-brightgreen" alt="Demo">
+  </a>
+</p>
+
 ---
 
 ## 🎮 Overview
@@ -113,9 +119,9 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 For questions or feedback, contact:
 
-- **Your Name**
-- **Email:** [kennyandriantsirafychan@gmail.com](kennyandriantsirafychan@gmail.com)
-- **GitHub:** [kenny](https://github.com/kenny516)
+- **Kenny Andriantsirafy Chan**
+- **Email:** [kennyandriantsirafychan@gmail.com](mailto:kennyandriantsirafychan@gmail.com)
+- **GitHub:** [kenny516](https://github.com/kenny516)
 
 ---
 
@@ -123,4 +129,4 @@ For questions or feedback, contact:
 
 ---
 
-This version includes color-coded sections, icons, and badges to enhance the visual appeal of your README. You can further customize it by adding your own images, screenshots, or additional sections as needed.
+This version includes a demo button linking to the live game, which users can easily access and play. Feel free to further customize this README to suit your preferences!

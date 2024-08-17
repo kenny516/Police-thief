@@ -125,12 +125,19 @@ class Sommet {
         pointPol.place,
         voleur.place
       );
-      point = point - (cheminPolVol.length > 0 ? cheminPolVol.length * 2 : 0);
+      point = point - (cheminPolVol.length > 0 ? cheminPolVol.length : 0);
     }
+    point = point + (voleurCentre.length > 0 ? voleurCentre.length : 0);
     return point;
   }
-
-  static minimax(gameState, depth, df, maximizingPlayer) {
+  static minimax(
+    gameState,
+    depth,
+    df,
+    maximizingPlayer,
+    alpha = -Infinity,
+    beta = Infinity
+  ) {
     if (
       depth === 0 ||
       gameState.winGame(gameState.thief) ||
@@ -142,42 +149,65 @@ class Sommet {
     if (maximizingPlayer) {
       let maxEval = -Infinity;
       let bestMoveAndPolice = [null, null];
+
       for (let i = 0; i < gameState.getCops().length; i++) {
         const police = gameState.getCops()[i];
+
         for (const neighbor of police.place.voisins) {
-          if (!gameState.getcopsByPlace(neighbor)) {
-            if (police.can_moov(neighbor, gameState.personnes)) {
-              const Pnew = new Person(police.name, neighbor, police.type);
-              const newPoliceState = gameState
-                .getCops()
-                .map((p, index) => (index === i ? Pnew : p));
-              const newState = new Game(gameState.thief, newPoliceState);
-              const evaluate = Sommet.minimax(newState, depth - 1, df, false); // Utilisation de Sommet.minimax
-              if (evaluate > maxEval) {
-                maxEval = evaluate;
-                bestMoveAndPolice = [neighbor, i];
-                console.log(bestMoveAndPolice);
-              }
+          if (
+            !gameState.getcopsByPlace(neighbor) &&
+            police.can_moov(neighbor, gameState.personnes)
+          ) {
+            const Pnew = new Person(police.name, neighbor, police.type);
+            const newPoliceState = gameState
+              .getCops()
+              .map((p, index) => (index === i ? Pnew : p));
+            const newState = new Game(gameState.thief, newPoliceState);
+            const evaluate = Sommet.minimax(
+              newState,
+              depth - 1,
+              df,
+              false,
+              alpha,
+              beta
+            );
+            if (evaluate > maxEval) {
+              maxEval = evaluate;
+              bestMoveAndPolice = [neighbor, i];
+            }
+            alpha = Math.max(alpha, evaluate);
+            if (beta <= alpha) {
+              break; // Beta cut-off
             }
           }
         }
       }
 
-      console.log("dfffffd" + df);
       return depth === df ? bestMoveAndPolice.slice() : maxEval;
     } else {
       let minEval = Infinity;
+
       for (const neighbor of gameState.thief.place.voisins) {
         if (gameState.thief.can_moov(neighbor, gameState.personnes)) {
           const newThiefState = new Person(
             gameState.thief.name,
-            gameState.thief.place,
+            neighbor,
             gameState.thief.type
           );
-          newThiefState.deplacer(neighbor, gameState.personnes);
           const newState = new Game(newThiefState, gameState.getCops());
-          const evaluate = Sommet.minimax(newState, depth - 1, df, true); // Utilisation de Sommet.minimax
+          const evaluate = Sommet.minimax(
+            newState,
+            depth - 1,
+            df,
+            true,
+            alpha,
+            beta
+          );
           minEval = Math.min(minEval, evaluate);
+          beta = Math.min(beta, evaluate);
+          if (beta <= alpha) {
+            break; // Alpha cut-off
+          }
         }
       }
       return minEval;
